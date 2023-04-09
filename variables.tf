@@ -48,19 +48,17 @@ variable "function_timeout" {
 variable "email_sender" {
   description = "Email address from which the emails will be recieved (the format is: email@example.com <email@example.com>)"
   type        = string
-  default     = "daniel@terasky.com <daniel@terasky.com>"
 }
 
 variable "email_recipients" {
   description = "Email addresses of recipients (comma separated)"
   type        = string
-  default     = "danielvaknin10@gmail.com"
 }
 
 variable "event_cron" {
   description = "Cron value for the EventBridge rule"
   type        = string
-  default     = "cron(0 10 3 * ? *)"
+  default     = "cron(0 10 * * ? 0)"
 }
 
 variable "function_assume_role_name" {
