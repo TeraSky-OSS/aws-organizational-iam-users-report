@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create a Cross-Account IAM Role for the Organizational IAM Users Report automation
+
+Parameters:
+  AutomationAccountId:
+    Type: String
+    Description: The AWS Account ID of the account running the automation (Lambda function)
+    MaxLength: 12
+    MinLength: 12
+  RoleName:
+    Type: String
+    Description: Name of the role to be created
+    Default: OrganizationIAMUsersReportLambda
+
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${RoleName}
+      ManagedPolicyArns: 
+        - arn:aws:iam::aws:policy/IAMReadOnlyAccess
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub 'arn:aws:iam::${AutomationAccountId}:root'
+            Action:
+              - sts:AssumeRole
+      Path: /
