@@ -62,6 +62,7 @@ def send_email(sender, recipient, subject, body, file_path):
 
     try:
         # Provide the contents of the email.
+        logger.info(f'Sending result email to {recipient}')
         response = client.send_email(
             FromEmailAddress=sender,
             Destination={'ToAddresses': [recipient]},
@@ -114,7 +115,7 @@ def lambda_handler(event, context):
             )
 
             # Generate credentials report
-            logger.info('Generating IAM credentials report...')
+            logger.info(f'Generating IAM credentials report for account {account}')
             iam_client.generate_credential_report()
             credential_report = iam_client.get_credential_report()
             credential_report_headers = credential_report['Content'].decode("utf-8").split("\n")[0]
@@ -124,7 +125,7 @@ def lambda_handler(event, context):
                 credential_report_content.append(line.split(','))
 
         except Exception as e:
-            logger.error(f'Failed to check account {account}. Error: {e}')
+            logger.error(f'Failed to generate IAM credentials report in account {account}. Error: {e}')
 
     # Create temp dir for CSV
     tempdir = tempfile.mkdtemp()
