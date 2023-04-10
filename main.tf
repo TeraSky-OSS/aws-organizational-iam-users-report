@@ -40,7 +40,7 @@ module "lambda_function" {
             "Effect": "Allow",
             "Action": "organizations:ListAccounts",
             "Resource": "*"
-        },
+        }
     ]
 }
 EOF
