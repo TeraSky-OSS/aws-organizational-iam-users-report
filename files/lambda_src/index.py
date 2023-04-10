@@ -23,7 +23,7 @@ org_client = boto3.client('organizations')
 sts_client = boto3.client('sts')
 
 
-def send_email(sender, recipient, subject, body, file_path):
+def send_email(sender, recipient, subject, file_path):
     # The character encoding for the email.
     CHARSET = "utf-8"
 
@@ -40,12 +40,6 @@ def send_email(sender, recipient, subject, body, file_path):
 
     # Create a multipart/alternative child container.
     msg_body = MIMEMultipart('alternative')
-
-    # Encode the text and HTML content and set the character encoding.
-    htmlpart = MIMEText(body.encode(CHARSET), 'html', CHARSET)
-
-    # Add the HTML part to the child container.
-    msg_body.attach(htmlpart)
 
     # Define the attachment part and encode it using MIMEApplication.
     att = MIMEApplication(open(file_path, 'rb').read())
@@ -143,11 +137,10 @@ def lambda_handler(event, context):
         writer.writerows(credential_report_content)
     
     with open('email_body.html', 'r') as file:
-        email_body = file.read()
         email_subject = 'AWS Organization IAM Users Credentials Report'
 
         for email_recipient in EMAIL_RECIPIENTS.split(','):
-            send_email(EMAIL_SENDER, email_recipient, email_subject, email_body, path + f'/{GENERATED_FILE_NAME}')
+            send_email(EMAIL_SENDER, email_recipient, email_subject, path + f'/{GENERATED_FILE_NAME}')
 
     return {
         'statusCode': 200,
