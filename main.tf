@@ -18,20 +18,29 @@ module "lambda_function" {
   create_package         = false
   local_existing_package = data.archive_file.lambda_function.output_path
 
-  attach_policies    = true
-  policies           = var.function_iam_policies
-  number_of_policies = length(var.function_iam_policies)
-
   attach_policy_json = true
   policy_json        = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
         {
+            "Sid": "AssumeRole",
             "Effect": "Allow",
             "Action": "sts:AssumeRole",
-            "Resource": ["*"]
-        }
+            "Resource": "*"
+        },
+        {
+            "Sid": "SendEmail",
+            "Effect": "Allow",
+            "Action": "ses:SendEmail",
+            "Resource": "*"
+        },
+        {
+            "Sid": "OrgListAccounts",
+            "Effect": "Allow",
+            "Action": "organizations:ListAccounts",
+            "Resource": "*"
+        },
     ]
 }
 EOF

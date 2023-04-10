@@ -30,15 +30,6 @@ variable "function_description" {
   default     = "Lambda function to send a report of all IAM users in the organization"
 }
 
-variable "function_iam_policies" {
-  description = "List of IAM managed policies to attach to the Lambda function"
-  type        = list(string)
-  default = [
-    "arn:aws:iam::aws:policy/AWSOrganizationsReadOnlyAccess",
-    "arn:aws:iam::aws:policy/AmazonSESFullAccess"
-  ]
-}
-
 variable "function_timeout" {
   description = "The amount of time your Lambda Function has to run in seconds"
   type        = number
