@@ -123,8 +123,8 @@ def lambda_handler(event, context):
             for line in credential_report['Content'].decode("utf-8").split("\n")[1:]:
                 credential_report_content.append(line.split(','))
 
-        except:
-            logger.error(f'Failed to check account {account}')
+        except Exception as e:
+            logger.error(f'Failed to check account {account}. Error: {e}')
 
     # Create temp dir for CSV
     tempdir = tempfile.mkdtemp()
