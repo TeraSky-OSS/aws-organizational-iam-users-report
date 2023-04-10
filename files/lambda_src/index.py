@@ -41,13 +41,10 @@ def send_email(sender, recipient, subject, body, file_path):
     # Create a multipart/alternative child container.
     msg_body = MIMEMultipart('alternative')
 
-    # Encode the text and HTML content and set the character encoding. This step is
-    # necessary if you're sending a message with characters outside the ASCII range.
-    # textpart = MIMEText(BODY_TEXT.encode(CHARSET), 'plain', CHARSET)
+    # Encode the text and HTML content and set the character encoding.
     htmlpart = MIMEText(body.encode(CHARSET), 'html', CHARSET)
 
-    # Add the text and HTML parts to the child container.
-    # msg_body.attach(textpart)
+    # Add the HTML part to the child container.
     msg_body.attach(htmlpart)
 
     # Define the attachment part and encode it using MIMEApplication.
@@ -55,37 +52,30 @@ def send_email(sender, recipient, subject, body, file_path):
 
     # Add a header to tell the email client to treat this part as an attachment,
     # and to give the attachment a name.
-    att.add_header('Content-Disposition', 'attachment',
-                   filename=os.path.basename(file_path))
+    att.add_header('Content-Disposition', 'attachment', filename=os.path.basename(file_path))
 
-    # Attach the multipart/alternative child container to the multipart/mixed
-    # parent container.
+    # Attach the multipart/alternative child container to the multipart/mixed parent container.
     msg.attach(msg_body)
 
     # Add the attachment to the parent container.
     msg.attach(att)
-    #print(msg)
+
     try:
-        #Provide the contents of the email.
+        # Provide the contents of the email.
         response = client.send_email(
             FromEmailAddress=sender,
-            # FromArn='arn:aws:ses:us-east-1:542218670306:identity/finops@terasky.com',
-            Destination={
-              'ToAddresses': [recipient]
-            },
+            Destination={'ToAddresses': [recipient]},
             Content={
               'Raw': {
                 'Data': msg.as_string()
               }
             },
-            # ConfigurationSetName=CONFIGURATION_SET
         )
     # Display an error if something goes wrong.
     except ClientError as e:
-        print(e.response['Error']['Message'])
+        logger.error(e.response['Error']['Message'])
     else:
-        print("Email sent! Message ID:"),
-        print(response['MessageId'])
+        logger.info(f'Email sent! Message ID: {response["MessageId"]}')
 
 
 def lambda_handler(event, context):
