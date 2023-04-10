@@ -17,6 +17,7 @@ ASSUME_ROLE_NAME = os.environ.get('ASSUME_ROLE_NAME', 'OrganizationIAMUsersRepor
 AWS_REGION = os.environ.get('AWS_REGION')
 EMAIL_SENDER = os.environ.get('EMAIL_SENDER')
 EMAIL_RECIPIENTS = os.environ.get('EMAIL_RECIPIENTS')
+EMAIL_SUBJECT = 'AWS Organization IAM Users Credentials Report'
 GENERATED_FILE_NAME = 'iam_users_report.csv'
 
 org_client = boto3.client('organizations')
@@ -24,11 +25,8 @@ sts_client = boto3.client('sts')
 
 
 def send_email(sender, recipient, subject, file_path):
-    # The character encoding for the email.
-    CHARSET = "utf-8"
-
     # Create a new SES resource and specify a region.
-    client = boto3.client('sesv2', region_name=AWS_REGION)
+    ses_client = boto3.client('sesv2', region_name=AWS_REGION)
 
     # Create a multipart/mixed parent container.
     msg = MIMEMultipart('mixed')
@@ -57,7 +55,7 @@ def send_email(sender, recipient, subject, file_path):
     try:
         # Provide the contents of the email.
         logger.info(f'Sending result email to {recipient}')
-        response = client.send_email(
+        response = ses_client.send_email(
             FromEmailAddress=sender,
             Destination={'ToAddresses': [recipient]},
             Content={
@@ -136,11 +134,9 @@ def lambda_handler(event, context):
         # write multiple rows
         writer.writerows(credential_report_content)
     
-    with open('email_body.html', 'r') as file:
-        email_subject = 'AWS Organization IAM Users Credentials Report'
-
-        for email_recipient in EMAIL_RECIPIENTS.split(','):
-            send_email(EMAIL_SENDER, email_recipient, email_subject, path + f'/{GENERATED_FILE_NAME}')
+    # Send email
+    for email_recipient in EMAIL_RECIPIENTS.split(','):
+        send_email(EMAIL_SENDER, email_recipient, EMAIL_SUBJECT, path + f'/{GENERATED_FILE_NAME}')
 
     return {
         'statusCode': 200,
