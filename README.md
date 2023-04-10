@@ -2,13 +2,14 @@
 
 The AWS Organizational IAM Users Report tool will help you generate a report of all IAM users in your AWS organization, including their last activity, password age, and more.
 
+This tool is based on the AWS IAM Credentials Report native tool, and extends it to generate a report for the entire AWS organization.
+
 Although the tool is being deployed with Terraform, the Terraform module will also deploy a set of resources with CloudFormation StackSets as there is a limitation with Terraform ("dynamic providers")
 
 The following resources are being created as part of this module:
 - Lambda function in the management account
 - EventBridge event rule in the management account
-- CloudFormation StackSet that deploys the following resources to in each chosen member account:
-  - IAM role
+- CloudFormation StackSet that deploys an IAM role in each chosen member account:
 
 ## Example Usage
 
