@@ -32,7 +32,10 @@ module "lambda_function" {
         {
             "Sid": "SendEmail",
             "Effect": "Allow",
-            "Action": "ses:SendEmail",
+            "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail"
+            ],
             "Resource": "*"
         },
         {
