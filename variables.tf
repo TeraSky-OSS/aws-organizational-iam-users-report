@@ -49,7 +49,7 @@ variable "email_recipients" {
 variable "event_cron" {
   description = "Cron value for the EventBridge rule"
   type        = string
-  default     = "cron(0 10 * * ? 0)"
+  default     = "cron(0 0 ? * SUN *)"
 }
 
 variable "function_assume_role_name" {

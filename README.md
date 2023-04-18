@@ -97,7 +97,7 @@ In some cases, running `terraform destroy` might fail (for example if there is a
 | <a name="input_deploy_to_organization"></a> [deploy\_to\_organization](#input\_deploy\_to\_organization) | Whether to deploy the automation to the main OU of the organization (all AWS accounts in the organization) | `bool` | `true` | no |
 | <a name="input_email_recipients"></a> [email\_recipients](#input\_email\_recipients) | Email addresses of recipients (comma separated) | `string` | n/a | yes |
 | <a name="input_email_sender"></a> [email\_sender](#input\_email\_sender) | Email address from which the emails will be recieved (the format is: email@example.com <email@example.com>) | `string` | n/a | yes |
-| <a name="input_event_cron"></a> [event\_cron](#input\_event\_cron) | Cron value for the EventBridge rule | `string` | `"cron(0 10 * * ? 0)"` | no |
+| <a name="input_event_cron"></a> [event\_cron](#input\_event\_cron) | Cron value for the EventBridge rule | `string` | `"cron(0 0 ? * SUN *)"` | no |
 | <a name="input_function_assume_role_name"></a> [function\_assume\_role\_name](#input\_function\_assume\_role\_name) | Name of IAM role that will be created in all member accounts, and will be assumed by the Lambda function | `string` | `"OrganizationIAMUsersReportLambda"` | no |
 | <a name="input_function_description"></a> [function\_description](#input\_function\_description) | Description of the Lambda function | `string` | `"Lambda function to send a report of all IAM users in the organization"` | no |
 | <a name="input_function_timeout"></a> [function\_timeout](#input\_function\_timeout) | The amount of time your Lambda Function has to run in seconds | `number` | `60` | no |
